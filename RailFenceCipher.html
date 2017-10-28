@@ -1,0 +1,30 @@
+<html>
+<title>Rail Fence Cipher</title>
+<head>
+<link rel="stylesheet" type="text/css" href="RailFenceCipher.css" />
+<script type="text/javascript" src="RailFenceCipher.js"></script>       
+</head>
+<body onload="createTable()">
+        <h1>Rail Fence Cipher: </h1>
+        <div><center>
+                <h2>Plain Text:</h2>
+                <textarea id="plaintext" name="PlainText" rows="1" cols="50"></textarea>
+                <br><br>
+                Size of Fence = 
+                <input class="key" type="text" name="Key" value="2" disabled>
+                <br><br>
+                <button id="encryptBtn" onclick="encrypt()">&#709; Encrypt &#709;</button>&emsp;<button id="decryptBtn" onclick="decrypt()">&#8963; Decrypt &#8963;</button>
+                <br>
+                <h2>Cipher Text:</h2>
+                <textarea id="ciphertext" name="CipherText" rows="1" cols="50"></textarea>
+                <br><br>
+                <strong id="info"></strong>
+                </center>
+        </div>
+        <br><br>
+        <div class="scroll">
+              <table id="myTable" border="0"></table>  
+              <br><br><br><br><br>
+        </div>
+</body>
+</html>
