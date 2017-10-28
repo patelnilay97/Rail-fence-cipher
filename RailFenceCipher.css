@@ -1,0 +1,54 @@
+body{
+    font-family:"Helvetica Neue", sans-serif;
+    background-color: #ffffff;
+}
+
+h1{
+    text-align: center;
+}
+
+h1{
+    letter-spacing: 2px;
+}
+
+.key{
+    text-align: center;
+}
+
+#plaintext{
+    color: blue;
+    font-size: 20px;
+}
+
+#ciphertext{
+    color: magenta;
+    font-size: 20px;
+}
+
+table{
+    border-collapse:collapse;
+    table-layout: fixed;
+    border-spacing: 0;
+}
+td{
+    border: 0px solid #cccccc;
+    line-height: 1.428571429;
+	color:#000;
+	font-family:"Helvetica Neue", sans-serif;
+	font-size:25px;
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    max-width: 35px;
+    min-height: 35px;
+    max-height: 35px;
+    text-align: center;
+}
+
+.scroll{
+    overflow-x: scroll;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
