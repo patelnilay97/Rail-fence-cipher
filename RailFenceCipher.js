@@ -11,7 +11,7 @@ async function encrypt(){
     var n = plaintext.length;
     var i,j,k;
     deleteTable();
-    createTable(2*n + 1);
+    createTable(2*n-1);
     document.getElementById("info").innerHTML = "Plaintext is: "+plaintext;
     for(i = 1,j = 0;j<n;i++,j++){
         if(i>1){
@@ -35,15 +35,17 @@ async function encrypt(){
         document.getElementById("q" + k).style.color = '#ccc';
         document.getElementById("q" + k).innerHTML = '&#10136';
         document.getElementById("p" + k).innerHTML = '';
-        k = i + 1;
-        document.getElementById("q" + k).style.color = '#ccc';
-        document.getElementById("q" + k).innerHTML = '&#10138';
-        document.getElementById("p" + k).innerHTML = '';
-        await sleep(100);
+        if(j!=n/2){
+            k = i + 1;
+            document.getElementById("q" + k).style.color = '#ccc';
+            document.getElementById("q" + k).innerHTML = '&#10138';
+            document.getElementById("p" + k).innerHTML = '';
+            await sleep(100);
+        }
     }
     await sleep(2000);
     document.getElementById("info").innerHTML = "Ciphertext is created reading the pattern row by row";
-    for(i = 1;i <= 2*n;i++){
+    for(i = 1;i <= 2*n-1;i++){
         document.getElementById("q" + i).innerHTML = '';
     } 
     for(i = 3,j = 1;j<n/2;i+=4,j++){
@@ -63,17 +65,18 @@ async function encrypt(){
         document.getElementById("p" + i).innerHTML = document.getElementById("p" + k).innerHTML;
         document.getElementById("p" + k).innerHTML = '';
         await sleep(200);
-        i++;
-        k+=2;
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = document.getElementById("p" + k).innerHTML;
-        document.getElementById("p" + k).innerHTML = '';
-        await sleep(200);
+        if(j!=n/2){
+            i++;
+            k+=2;
+            document.getElementById("p" + i).style.color = '#000';
+            document.getElementById("p" + i).innerHTML = document.getElementById("p" + k).innerHTML;
+            document.getElementById("p" + k).innerHTML = ''; 
+            await sleep(200);
+        }
     }
     if(n%2==0)
-        i-=2;
-    for(j = 1;j<=n/2;i++,j++){
-        k = i + (2*j) - 1 - n - n%2;
+        i-=1;
+    for(j = 1,k = 1;j<=n/2;i++,j++,k+=2){
         document.getElementById("p" + i).style.color = '#ccc';
         document.getElementById("p" + i).innerHTML = document.getElementById("r" + k).innerHTML;
         document.getElementById("r" + k).innerHTML = '';
@@ -104,7 +107,7 @@ async function decrypt(){
     var n = ciphertext.length;
     var i,j,k;
     deleteTable();
-    createTable(2*n + 1);
+    createTable(2*n-1);
     document.getElementById("info").innerHTML = "Ciphertext is: "+ciphertext;
     for(i = 1,j = 0;j<n;i++,j++){
         if(i>1){
@@ -118,7 +121,7 @@ async function decrypt(){
     }
     await sleep(2000);
     document.getElementById("info").innerHTML ="Fill it row wise leaving one place down.";
-    clearTable(2*n + 1);
+    clearTable(2*n-1);
     for(i = 1,j = 0;j<n/2;i+=2,j++){
         if(i>1){
             document.getElementById("p" + i).style.color = '#ccc';
@@ -148,7 +151,7 @@ async function decrypt(){
             k = i + 1;
             document.getElementById("p" + k).innerHTML = '';
         }
-        else{
+        else if(i!=2*n-1){
             document.getElementById("q" + i).style.color = '#ccc';
             document.getElementById("q" + i).innerHTML = '&#10138';
         }
@@ -158,8 +161,10 @@ async function decrypt(){
     for(i = 3,j = 1;j<=n/2;i+=4,j++){
         k = i - 1;
         document.getElementById("q" + k).innerHTML = '';
-        k = i + 1;
-        document.getElementById("q" + k).innerHTML = '';
+        if(i!=2*n-1){
+            k = i + 1;
+            document.getElementById("q" + k).innerHTML = '';
+        }
         document.getElementById("q" + i).style.color = '#000';
         document.getElementById("q" + i).innerHTML = document.getElementById("r" + i).innerHTML;
         document.getElementById("r" + i).innerHTML = '';
@@ -167,9 +172,11 @@ async function decrypt(){
         k = i - 1;
         document.getElementById("p" + k).style.color = '#ccc';
         document.getElementById("p" + k).innerHTML = '&#10137';
-        k = i + 1;
-        document.getElementById("p" + k).style.color = '#ccc';
-        document.getElementById("p" + k).innerHTML = '&#10137';
+        if(i!=2*n-1){
+            k = i + 1;
+            document.getElementById("p" + k).style.color = '#ccc';
+            document.getElementById("p" + k).innerHTML = '&#10137';
+        }
         document.getElementById("p" + i).style.color = '#000';
         document.getElementById("p" + i).innerHTML = document.getElementById("q" + i).innerHTML;
         document.getElementById("q" + i).innerHTML = '';
