@@ -209,8 +209,8 @@ async function decrypt(){
                     document.getElementById((j+1) + '$' + (i-1)).style.color = '#ccc';
                     document.getElementById((j+1) + '$' + (i-1)).innerHTML = '&#10138';
                 }
+                await sleep(100);
             }
-            await sleep(50);
             j++;
         }
         if(c <= nr - 2 && f == 0)
