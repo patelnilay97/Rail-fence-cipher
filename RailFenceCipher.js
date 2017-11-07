@@ -7,91 +7,87 @@ async function encrypt(){
     document.getElementById("decryptBtn").disabled = true;
     var plaintext = document.getElementById("plaintext").value;
     document.getElementById("ciphertext").value = '';
+    var key = document.getElementById("key").value;
     plaintext = plaintext.replace(/ /g,'');
     var n = plaintext.length;
-    var i,j,k;
+    var i,j,k,c,nr,f,nc;
+    nr = 2*key - 1;
+    nc = 2*n - 1;
     deleteTable();
     createTable(2*n-1);
     document.getElementById("info").innerHTML = "Plaintext is: "+plaintext;
     for(i = 1,j = 0;j<n;i++,j++){
         if(i>1){
-            document.getElementById("p" + i).style.color = '#ccc';
-            document.getElementById("p" + i).innerHTML = '&#10137';
+            document.getElementById(1 + '$' + i).style.color = '#ccc';
+            document.getElementById(1 + '$' + i).innerHTML = '&#10137';
             i++;
         }
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = plaintext[j];
+        document.getElementById(1 + '$' + i).style.color = '#000';
+        document.getElementById(1 + '$' + i).innerHTML = plaintext[j];
         await sleep(100);
-    } 
+    }
     await sleep(500);
-    document.getElementById("info").innerHTML = "Plaintext is written downwards and diagonally on successive rails of an imaginary fence.";
-    for(i = 3,j = 1;j<=n/2;i+=4,j++){
-        document.getElementById("q" + i).innerHTML = document.getElementById("p" + i).innerHTML;
-        document.getElementById("p" + i).innerHTML = '';
-        await sleep(100);
-        document.getElementById("r" + i).innerHTML = document.getElementById("q" + i).innerHTML;
-        document.getElementById("q" + i).innerHTML = '';
-        k = i - 1;
-        document.getElementById("q" + k).style.color = '#ccc';
-        document.getElementById("q" + k).innerHTML = '&#10136';
-        document.getElementById("p" + k).innerHTML = '';
-        if(j!=n/2){
-            k = i + 1;
-            document.getElementById("q" + k).style.color = '#ccc';
-            document.getElementById("q" + k).innerHTML = '&#10138';
-            document.getElementById("p" + k).innerHTML = '';
+    document.getElementById("info").innerHTML = "Plaintext is written downwards and diagonally on successive rails of an imaginary fence of size: "+key;
+    for(i = 1,c = 1,f = 1;i<=2*n-1;i+=2){
+        j = 1;
+        if(i>1)
+            document.getElementById(1 + '$' + (i-1)).innerHTML = '';
+        while(j<=c){
+            if(i>1 && j<c){
+                document.getElementById((j+1) + '$' + i).innerHTML = document.getElementById(j + '$' + i).innerHTML;
+                document.getElementById(j + '$' + i).innerHTML = '';
+            }
+            if(i>1 && j==c){
+                if(f == 0){
+                    document.getElementById((j-1) + '$' + (i-1)).style.color = '#ccc';
+                    document.getElementById((j-1) + '$' + (i-1)).innerHTML = '&#10136';
+                }
+                else{
+                    document.getElementById((j+1) + '$' + (i-1)).style.color = '#ccc';
+                    document.getElementById((j+1) + '$' + (i-1)).innerHTML = '&#10138';
+                }
+            }
             await sleep(100);
+            j++;
+        }
+        if(c <= nr - 2 && f == 0)
+            c += 2;
+        else if(c==nr && f == 0){
+            c -= 2;
+            f = 1;
+        }
+        else if(c>=3 && f == 1)
+            c -= 2;
+        else if(c==1 && f == 1){
+            c += 2;
+            f = 0;
         }
     }
     await sleep(2000);
     document.getElementById("info").innerHTML = "Ciphertext is created reading the pattern row by row";
     for(i = 1;i <= 2*n-1;i++){
-        document.getElementById("q" + i).innerHTML = '';
-    } 
-    for(i = 3,j = 1;j<n/2;i+=4,j++){
-        document.getElementById("p" + i).style.color = '#ccc';
-        document.getElementById("p" + i).innerHTML = '&#10137';
-        await sleep(100);
-    } 
-    for(i = 1,j = 1;j<=n/2;i+=4,j++){
-        document.getElementById("r" + i).style.color = '#ccc';
-        document.getElementById("r" + i).innerHTML = '&#10137';
-        await sleep(100);
+        for(j = 2;j <= nr;j+=2)
+            document.getElementById(j + '$' + i).innerHTML = '';
     }
     await sleep(1000);
-    for(i = 2,j = 1;j<=n/2;i++,j++){
-        k = i + (2*j) - 1;
-        document.getElementById("p" + i).style.color = '#ccc';
-        document.getElementById("p" + i).innerHTML = document.getElementById("p" + k).innerHTML;
-        document.getElementById("p" + k).innerHTML = '';
-        await sleep(200);
-        if(j!=n/2){
-            i++;
-            k+=2;
-            document.getElementById("p" + i).style.color = '#000';
-            document.getElementById("p" + i).innerHTML = document.getElementById("p" + k).innerHTML;
-            document.getElementById("p" + k).innerHTML = ''; 
-            await sleep(200);
+    for(i = 3,j = 1,k = 3;i <= 2*n-1;i+=2){
+        while(document.getElementById(j + '$' + k).innerHTML == ''){
+            if(k <= nc-2)
+                k += 2;
+            else if(k == nc){
+                j += 2;
+                k = j;
+            }
         }
-    }
-    if(n%2==0)
-        i-=1;
-    for(j = 1,k = 1;j<=n/2;i++,j++,k+=2){
-        document.getElementById("p" + i).style.color = '#ccc';
-        document.getElementById("p" + i).innerHTML = document.getElementById("r" + k).innerHTML;
-        document.getElementById("r" + k).innerHTML = '';
+        document.getElementById(1 + '$' + (i-1)).innerHTML = '&#10137';
         await sleep(200);
-        i++;
-        k+=2;
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = document.getElementById("r" + k).innerHTML;
-        document.getElementById("r" + k).innerHTML = '';
+        document.getElementById(1 + '$' + i).innerHTML = document.getElementById(j + '$' + k).innerHTML;
+        document.getElementById(j + '$' + k).innerHTML = '';
         await sleep(200);
     }
-
     var str = '';
-    for(i = 1,j = 1;j<=n;j++,i+=2){
-        str += document.getElementById("p" + i).innerHTML;
+    for(i = 1;i<=nc;i+=2){
+        str += document.getElementById(1 + '$' + i).innerHTML;
     }
     document.getElementById("ciphertext").value = str;
     document.getElementById("encryptBtn").disabled = false;
@@ -103,89 +99,171 @@ async function decrypt(){
     document.getElementById("decryptBtn").disabled = true;
     var ciphertext = document.getElementById("ciphertext").value;
     document.getElementById("plaintext").value = '';
+    var key = document.getElementById("key").value;
     ciphertext = ciphertext.replace(/ /g,'');
     var n = ciphertext.length;
-    var i,j,k;
+    var i,j,k,c1,c2,c,nr,f,nc;
+    nr = 2*key - 1;
+    nc = 2*n - 1;
     deleteTable();
     createTable(2*n-1);
     document.getElementById("info").innerHTML = "Ciphertext is: "+ciphertext;
     for(i = 1,j = 0;j<n;i++,j++){
         if(i>1){
-            document.getElementById("p" + i).style.color = '#ccc';
-            document.getElementById("p" + i).innerHTML = '&#10137';
+            document.getElementById(1 + '$' + i).style.color = '#ccc';
+            document.getElementById(1 + '$' + i).innerHTML = '&#10137';
             i++;
         }
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = ciphertext[j];
+        document.getElementById(1 + '$' + i).style.color = '#000';
+        document.getElementById(1 + '$' + i).innerHTML = ciphertext[j];
         await sleep(100);
     }
     await sleep(2000);
     document.getElementById("info").innerHTML ="Fill it row wise leaving one place down.";
     clearTable(2*n-1);
-    for(i = 1,j = 0;j<n/2;i+=2,j++){
-        if(i>1){
-            document.getElementById("p" + i).style.color = '#ccc';
-            document.getElementById("p" + i).innerHTML = '&#10137';
-            i += 2;
+    c1 = 4*(key-1);
+    c2 = 0;
+    for(i = 1,j = 1,k = 0,f = 0;k<n;k++){
+        if(k>0){
+            c = 0;
+            if(f==0){
+                if(c1==0){
+                    while(i<nc && c<c2){
+                        c++;
+                        i++;
+                    }
+                    if(c==c2)
+                        f = 1;
+                    else if(c<c2){
+                        j += 2;
+                        i = j;
+                        c1 -= 4;
+                        c2 += 4;
+                        f = 0;
+                    }
+                }
+                else{
+                    while(i<nc && c<c1){
+                        c++;
+                        i++;
+                    }
+                    if(c==c1)
+                        f = 1;
+                    else if(c<c1){
+                        j += 2;
+                        i = j;
+                        c1 -= 4;
+                        c2 += 4;
+                        f = 0;
+                    }
+                }
+            }
+            else if(f==1){
+                if(c2==0){
+                    while(i<nc && c<c1){
+                        c++;
+                        i++;
+                    }
+                    if(c==c1)
+                        f = 0;
+                    else if(c<c1){
+                        j += 2;
+                        i = j;
+                        c1 -= 4;
+                        c2 += 4;
+                        f = 0;
+                    }
+                }
+                else{
+                    while(i<nc && c<c2){
+                        c++;
+                        i++;
+                    }
+                    if(c==c2)
+                        f = 0;
+                    else if(c<c2){
+                        j += 2;
+                        i = j;
+                        c1 -= 4;
+                        c2 += 4;
+                        f = 0;
+                    }
+                }
+            }
         }
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = ciphertext[j];
-        await sleep(100);
+        document.getElementById(j + '$' + i).style.color = '#000';
+        document.getElementById(j + '$' + i).innerHTML = ciphertext[k];
+        await sleep(200);
     }
-    for(i = 1,j = Math.ceil(n/2);j<n;i+=2,j++){
-        document.getElementById("r" + i).style.color = '#ccc';
-        document.getElementById("r" + i).innerHTML = '&#10137';
-        i += 2;
-        document.getElementById("r" + i).style.color = '#000';
-        document.getElementById("r" + i).innerHTML = ciphertext[j];
-        await sleep(100);
-    }
-    await sleep(2000);
+    await sleep(1000);
     document.getElementById("info").innerHTML = "We traverse the matrix in zig-zag manner to obtain the original text.";
-    for(i = 2,j = 1;j<n;i+=2,j++){
-        if(j%2==1){
-            document.getElementById("q" + i).style.color = '#ccc';
-            document.getElementById("q" + i).innerHTML = '&#10136';
-            k = i - 1;
-            document.getElementById("r" + k).innerHTML = '';
-            k = i + 1;
-            document.getElementById("p" + k).innerHTML = '';
+    for(i = 1,c = 1,f = 1;i<=2*n-1;i+=2){
+        j = 1;
+        while(j<=c){
+            if(i>1 && j==c){
+                if(f == 0){
+                    document.getElementById((j-1) + '$' + (i-1)).style.color = '#ccc';
+                    document.getElementById((j-1) + '$' + (i-1)).innerHTML = '&#10136';
+                }
+                else{
+                    document.getElementById((j+1) + '$' + (i-1)).style.color = '#ccc';
+                    document.getElementById((j+1) + '$' + (i-1)).innerHTML = '&#10138';
+                }
+            }
+            await sleep(50);
+            j++;
         }
-        else if(i!=2*n-1){
-            document.getElementById("q" + i).style.color = '#ccc';
-            document.getElementById("q" + i).innerHTML = '&#10138';
+        if(c <= nr - 2 && f == 0)
+            c += 2;
+        else if(c==nr && f == 0){
+            c -= 2;
+            f = 1;
         }
-        await sleep(100);
+        else if(c>=3 && f == 1)
+            c -= 2;
+        else if(c==1 && f == 1){
+            c += 2;
+            f = 0;
+        }
     }
     await sleep(2000);
-    for(i = 3,j = 1;j<=n/2;i+=4,j++){
-        k = i - 1;
-        document.getElementById("q" + k).innerHTML = '';
-        if(i!=2*n-1){
-            k = i + 1;
-            document.getElementById("q" + k).innerHTML = '';
+    for(i = 1,c = 1,f = 1;i<=2*n-1;i+=2){
+        j = c;
+        if(f == 0 && i>1){
+            document.getElementById((j-1) + '$' + (i-1)).innerHTML = '';
         }
-        document.getElementById("q" + i).style.color = '#000';
-        document.getElementById("q" + i).innerHTML = document.getElementById("r" + i).innerHTML;
-        document.getElementById("r" + i).innerHTML = '';
-        await sleep(100);
-        k = i - 1;
-        document.getElementById("p" + k).style.color = '#ccc';
-        document.getElementById("p" + k).innerHTML = '&#10137';
-        if(i!=2*n-1){
-            k = i + 1;
-            document.getElementById("p" + k).style.color = '#ccc';
-            document.getElementById("p" + k).innerHTML = '&#10137';
+        else if(f == 1 && i>1){
+            document.getElementById((j+1) + '$' + (i-1)).innerHTML = '';
         }
-        document.getElementById("p" + i).style.color = '#000';
-        document.getElementById("p" + i).innerHTML = document.getElementById("q" + i).innerHTML;
-        document.getElementById("q" + i).innerHTML = '';
-        await sleep(100);
+        while(j>0){
+            if(i>1 && j>1){
+                document.getElementById((j-1) + '$' + i).innerHTML = document.getElementById(j + '$' + i).innerHTML;
+                document.getElementById(j + '$' + i).innerHTML = '';
+            }
+            if(i>1 && j==1){
+                document.getElementById(1 + '$' + (i-1)).innerHTML = '&#10137';
+                
+            }
+            await sleep(100);
+            j--;
+        }
+        if(c <= nr - 2 && f == 0)
+            c += 2;
+        else if(c==nr && f == 0){
+            c -= 2;
+            f = 1;
+        }
+        else if(c>=3 && f == 1)
+            c -= 2;
+        else if(c==1 && f == 1){
+            c += 2;
+            f = 0;
+        }
     }
 
     var str = '';
-    for(i = 1,j = 1;j<=n;j++,i+=2){
-        str += document.getElementById("p" + i).innerHTML; 
+    for(i = 1;i<=nc;i+=2){
+        str += document.getElementById(1 +'$'+ i).innerHTML; 
     }
     document.getElementById("plaintext").value = str;
     document.getElementById("encryptBtn").disabled = false;
@@ -229,30 +307,26 @@ function decrypt(){
 
 function createTable(n){
     var table = document.getElementById("myTable");
-    var row1 = table.insertRow();
-    var row2 = table.insertRow();
-    var row3 = table.insertRow();
+    var key = document.getElementById("key").value;
+    var row = [table.insertRow()];
+    for (var i = 1; i < 2*key-1; i++)
+        row[i] = table.insertRow();
     var cell;
     for (var i = 1; i <= n; i++) {
-        cell = row1.insertCell();
-        cell.setAttribute("id", "p"+ i);
-        cell = row2.insertCell();
-        cell.setAttribute("id", "q"+ i);
-        cell = row3.insertCell();
-        cell.setAttribute("id", "r"+ i);
+        for(var j = 1; j <= 2*key-1; j++){
+            cell = row[j-1].insertCell();
+            cell.setAttribute("id", j + '$' + i);
+        }
     }
 }
 
 function deleteTable(){
-    document.getElementById("myTable").deleteRow(-1);
-    document.getElementById("myTable").deleteRow(-1);
-    document.getElementById("myTable").deleteRow(-1);
+    document.getElementById("myTable").innerHTML = '';
 }
 
 function clearTable(n){
-    for(var i = 1;i <= n;i++){
-        document.getElementById("p" + i).innerHTML = '';
-        document.getElementById("q" + i).innerHTML = '';
-        document.getElementById("r" + i).innerHTML = '';
-    }
+    var key = document.getElementById("key").value;
+    for(var i = 1;i <= n;i++)
+        for(var j = 1; j <= 2*key-1; j++)
+            document.getElementById(j + '$' + i).innerHTML = '';
 }
