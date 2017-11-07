@@ -13,6 +13,7 @@ h1{
 
 .key{
     text-align: center;
+    width: 100px;
 }
 
 #plaintext{
@@ -32,7 +33,6 @@ table{
 }
 td{
     border: 0px solid #cccccc;
-    line-height: 1.428571429;
 	color:#000;
 	font-family:"Helvetica Neue", sans-serif;
 	font-size:25px;
@@ -43,12 +43,4 @@ td{
     min-height: 35px;
     max-height: 35px;
     text-align: center;
-}
-
-.scroll{
-    overflow-x: scroll;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
 }
