@@ -119,87 +119,27 @@ async function decrypt(){
         await sleep(100);
     }
     await sleep(2000);
-    document.getElementById("info").innerHTML ="Fill it row wise leaving one place down.";
+    document.getElementById("info").innerHTML =" We start writing the message, but leaving a '*' in place of the spaces yet to be occupied";
     clearTable(2*n-1);
-    c1 = 4*(key-1);
-    c2 = 0;
-    for(i = 1,j = 1,k = 0,f = 0;k<n;k++){
-        if(k>0){
-            c = 0;
-            if(f==0){
-                if(c1==0){
-                    while(i<nc && c<c2){
-                        c++;
-                        i++;
-                    }
-                    if(c==c2)
-                        f = 1;
-                    else if(c<c2){
-                        j += 2;
-                        i = j;
-                        c1 -= 4;
-                        c2 += 4;
-                        f = 0;
-                    }
-                }
-                else{
-                    while(i<nc && c<c1){
-                        c++;
-                        i++;
-                    }
-                    if(c==c1)
-                        f = 1;
-                    else if(c<c1){
-                        j += 2;
-                        i = j;
-                        c1 -= 4;
-                        c2 += 4;
-                        f = 0;
-                    }
-                }
-            }
-            else if(f==1){
-                if(c2==0){
-                    while(i<nc && c<c1){
-                        c++;
-                        i++;
-                    }
-                    if(c==c1)
-                        f = 0;
-                    else if(c<c1){
-                        j += 2;
-                        i = j;
-                        c1 -= 4;
-                        c2 += 4;
-                        f = 0;
-                    }
-                }
-                else{
-                    while(i<nc && c<c2){
-                        c++;
-                        i++;
-                    }
-                    if(c==c2)
-                        f = 0;
-                    else if(c<c2){
-                        j += 2;
-                        i = j;
-                        c1 -= 4;
-                        c2 += 4;
-                        f = 0;
-                    }
-                }
-            }
+    for(i = 1,j = 0;j<n;i++,j++){
+        if(i>1){
+            document.getElementById(1 + '$' + i).style.color = '#ccc';
+            document.getElementById(1 + '$' + i).innerHTML = '&#10137';
+            i++;
         }
-        document.getElementById(j + '$' + i).style.color = '#000';
-        document.getElementById(j + '$' + i).innerHTML = ciphertext[k];
-        await sleep(200);
+        document.getElementById(1 + '$' + i).style.color = '#000';
+        document.getElementById(1 + '$' + i).innerHTML = '*';
     }
-    await sleep(1000);
-    document.getElementById("info").innerHTML = "We traverse the matrix in zig-zag manner to obtain the original text.";
+    await sleep(500);
     for(i = 1,c = 1,f = 1;i<=2*n-1;i+=2){
         j = 1;
+        if(i>1)
+            document.getElementById(1 + '$' + (i-1)).innerHTML = '';
         while(j<=c){
+            if(i>1 && j<c){
+                document.getElementById((j+1) + '$' + i).innerHTML = document.getElementById(j + '$' + i).innerHTML;
+                document.getElementById(j + '$' + i).innerHTML = '';
+            }
             if(i>1 && j==c){
                 if(f == 0){
                     document.getElementById((j-1) + '$' + (i-1)).style.color = '#ccc';
@@ -209,8 +149,8 @@ async function decrypt(){
                     document.getElementById((j+1) + '$' + (i-1)).style.color = '#ccc';
                     document.getElementById((j+1) + '$' + (i-1)).innerHTML = '&#10138';
                 }
-                await sleep(100);
             }
+            await sleep(100);
             j++;
         }
         if(c <= nr - 2 && f == 0)
@@ -227,6 +167,29 @@ async function decrypt(){
         }
     }
     await sleep(2000);
+    document.getElementById("info").innerHTML ="Then we start replacing all the '*'s with the corresponding letters of ciphertext row by row";
+    for(i = 1,j = 1,k = 0;k < n;k++){
+        document.getElementById(j + '$' + i).innerHTML = ciphertext[k];
+        if(k<n-1){
+            if(i <= nc-2)
+                i += 2;
+            else if(i == nc){
+                j += 2;
+                i = j;
+            }
+            while(document.getElementById(j + '$' + i).innerHTML == ''){
+                if(i <= nc-2)
+                    i += 2;
+                else if(i == nc){
+                    j += 2;
+                    i = j;
+                }
+            }
+        }
+        await sleep(200);
+    }
+    await sleep(2000);
+    document.getElementById("info").innerHTML = "We traverse the matrix in zig-zag manner to obtain the original text.";
     for(i = 1,c = 1,f = 1;i<=2*n-1;i+=2){
         j = c;
         if(f == 0 && i>1){
